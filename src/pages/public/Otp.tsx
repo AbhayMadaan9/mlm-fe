@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import OTPInput from "react-otp-input"
 import Button from "../../components/common/Button"
 import { useVerifyOtpMutation } from "../../services/api"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { handleSetLocalStorage } from "../../utils/functions"
 import { setTokens } from "../../store/reducers/authReducer"
 import { useAppDispatch } from "../../store/store"
@@ -11,15 +11,15 @@ import toast from "react-hot-toast"
 
 export default function Otp() {
     const location = useLocation();
-const dispatch = useAppDispatch()
-const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
     const [otp, setOtp] = useState("")
     const [resendTimer, setResendTimer] = useState(30)
-    const [verifyOtp, {isLoading}] = useVerifyOtpMutation()
+    const [verifyOtp, { isLoading }] = useVerifyOtpMutation()
     const handleChange = (otpValue: string) => {
         setOtp(otpValue)
     }
-    const {email=""} = location?.state ?? {};
+    const { email = "" } = location?.state ?? {};
 
 
     const handleSubmit = async (e: React.FormEvent) => {
