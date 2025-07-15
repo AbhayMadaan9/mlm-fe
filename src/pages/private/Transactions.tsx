@@ -1,5 +1,5 @@
 import { DataGrid, type GridColDef, type GridPaginationModel } from '@mui/x-data-grid';
-import React from 'react'
+import React from 'react';
 import { useTransactionsQuery } from '../../services/api';
 import { tableFormat } from '../../utils/dateTIme';
 
@@ -11,7 +11,8 @@ export default function Transactions() {
 
   const skip = pagination.page * pagination.pageSize;
   const limit = pagination.pageSize;
-  const { data: transactions, isLoading: transactionLoading } = useTransactionsQuery({ skip, limit })
+
+  const { data: transactions, isLoading: transactionLoading } = useTransactionsQuery({ skip, limit });
 
   const columns: GridColDef[] = [
     { field: "_id", headerName: "#", width: 70 },
@@ -25,36 +26,31 @@ export default function Transactions() {
       headerName: "Type",
       width: 100
     },
-
     {
       field: "balance",
       headerName: "Balance",
       width: 150
     },
-
     {
       field: "createdAt",
       headerName: "Date",
       width: 180,
-      valueFormatter: ({ value }) => {
-        return tableFormat(value)
-      }
+      valueFormatter: ({ value }) => tableFormat(value)
     },
   ];
+
   return (
     <DataGrid
-      rows={transactions?.data ?? []}
+      rows={transactions?.data?.list ?? []}
       getRowId={(row) => row._id}
       columns={columns}
-      initialState={{
-        pagination: {
-          paginationModel: { pageSize: 10, page: 0 },
-        },
-      }}
-      pageSizeOptions={[10]}
-      onPaginationModelChange={setPagination}
+      rowCount={transactions?.data?.total ?? 0}
+      paginationMode="server"                      
+      paginationModel={pagination}                 
+      onPaginationModelChange={setPagination}      
+      pageSizeOptions={[5, 10, 20]}                
       disableRowSelectionOnClick
       loading={transactionLoading}
     />
-  )
+  );
 }

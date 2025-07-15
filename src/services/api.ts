@@ -214,13 +214,13 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-     users: builder.query<ApiResponseList<IUser>, { skip: number, limit: number }>({
-      query: ({ skip, limit }) => ({
+     users: builder.query<ApiResponseList<IUser>, { skip: number, limit: number, search?: string | null }>({
+      query: ({ skip, limit, search }) => ({
         url: 'users',
         method: 'GET',
         params:
         {
-          skip, limit
+          skip, limit, search
         }
       }),
     }),

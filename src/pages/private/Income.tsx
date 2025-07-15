@@ -10,9 +10,9 @@ import React from "react";
 import { tableFormat } from "../../utils/dateTIme";
 
 export default function Income() {
-      const [pagination, setPagination] = React.useState<GridPaginationModel>({
+  const [pagination, setPagination] = React.useState<GridPaginationModel>({
     page: 0,
-    pageSize: 5,
+    pageSize: 10,
   });
 
   const skip = pagination.page * pagination.pageSize;
@@ -21,38 +21,38 @@ export default function Income() {
     const {data: balance, isLoading: balanceLoading} = useBalanceQuery({})
     const {data: commissions, isLoading: commissionsLoading} = useCommissionsQuery({skip, limit})
 
-const rows = commissions?.data?.map((item) => ({
-  ...item,
-  referredUserName: item.referredUserId?.name || 'N/A',
-})) ?? [];
-const columns: GridColDef[] = [
+  const rows = commissions?.data?.list?.map((item) => ({
+    ...item,
+    referredUserName: item.referredUserId?.name || 'N/A',
+  })) ?? [];
+  const columns: GridColDef[] = [
     { field: "_id", headerName: "#", width: 70 },
     {
-        field: "amount",
-        headerName: "Amount (₹)",
-        width: 150
+      field: "amount",
+      headerName: "Amount (₹)",
+      width: 150
     },
-        {
-        field: "level",
-        headerName: "Level",
-        width: 100
-    },
-
-            {
-        field: "referredUserName",
-        headerName: "Referred User",
-        width: 150
+    {
+      field: "level",
+      headerName: "Level",
+      width: 100
     },
 
     {
-        field: "createdAt",
-        headerName: "Date",
-        width: 180,
-        valueFormatter: ({value}) => {
-            return tableFormat(value)
-        }
+      field: "referredUserName",
+      headerName: "Referred User",
+      width: 150
     },
-];
+
+    {
+      field: "createdAt",
+      headerName: "Date",
+      width: 180,
+      valueFormatter: ({ value }) => {
+        return tableFormat(value)
+      }
+    },
+  ];
 
   return (
     <div className="p-6 space-y-6">
@@ -87,16 +87,19 @@ const columns: GridColDef[] = [
           Comission History
         </Typography>
         <DataGrid
-          rows={ rows}
-            getRowId={(row) => row._id}
+          rows={rows}
+          getRowId={(row) => row._id}
           columns={columns}
           initialState={{
             pagination: {
               paginationModel: { pageSize: 5, page: 0 },
             },
           }}
-          pageSizeOptions={[5]}
+          rowCount={commissions?.data?.total ?? 0}
+          paginationMode="server"
+          paginationModel={pagination}
           onPaginationModelChange={setPagination}
+          pageSizeOptions={[5, 10, 20]}
           disableRowSelectionOnClick
           loading={commissionsLoading}
         />

@@ -18,7 +18,10 @@ declare global {
         success: boolean;
     }
       interface ApiResponseList<T> {
-        data: T[];
+        data: {
+          list: T[],
+          total: number
+        };
         message: string;
         success: boolean;
     }
